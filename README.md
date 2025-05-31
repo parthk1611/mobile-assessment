@@ -3,10 +3,29 @@
 ## Quick Start
 
 1. Ensure you have Flutter installed. See [Flutter installation guide](https://docs.flutter.dev/get-started/install).
-2. Clone the repo: ```git clone https://github.com/parthk1611/mobile-assessment.git`
-3. Navigate to the project directory: `cd ECO_ROUTE_MOBILE`
-4. Install dependencies: `flutter pub get`
-5. Run the app on a simulator or device: `flutter run`
+2. Clone the repo:
+
+   ```bash
+   git clone https://github.com/parthk1611/mobile-assessment.git
+   ```
+
+3. Navigate to the project directory:
+
+   ```bash
+   cd eco_route_mobile
+   ```
+
+4. Install dependencies:
+
+   ```bash
+   flutter pub get
+   ```
+
+5. Run the app on a simulator or device:
+
+   ```bash
+   flutter run
+   ```
 
 ## Mock Data
 
