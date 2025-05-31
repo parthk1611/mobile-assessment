@@ -3,7 +3,7 @@
 ## Quick Start
 
 1. Ensure you have Flutter installed. See [Flutter installation guide](https://docs.flutter.dev/get-started/install).
-2. Clone the repo: `git clone <your-repo-url>`
+2. Clone the repo: ```git clone <your-repo-url>`
 3. Navigate to the project directory: `cd ECO_ROUTE_MOBILE`
 4. Install dependencies: `flutter pub get`
 5. Run the app on a simulator or device: `flutter run`
