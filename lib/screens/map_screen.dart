@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -10,35 +11,51 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  static final LatLng _startLatLng = LatLng(43.6532, -79.3832); // Toronto
-  static final LatLng _endLatLng = LatLng(43.651070, -79.347015);
+  late LatLng _startLatLng;
+  late LatLng _endLatLng;
 
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   bool _loading = false;
+  bool _initialized = false;
 
-  final String _googleApiKey = 'AIzaSyB98ubxUFx0BfB8QmIJpdnvM19NfDEs7l8';
+  final String _googleApiKey = dotenv.env['GOOGLE_API_KEY'] ?? '';
 
   @override
-  void initState() {
-    super.initState();
-    _setMarkers();
-    _fetchPolyline();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+      // For now, use default coordinates if args are null or incomplete
+      _startLatLng = LatLng(43.6532, -79.3832);
+      _endLatLng = LatLng(43.651070, -79.347015);
+
+      // TODO: Optionally, parse actual coordinates from args or geocode addresses
+      // e.g., _startLatLng = parseCoordinates(args['fromCoordinates']);
+      // _endLatLng = parseCoordinates(args['toCoordinates']);
+
+      _setMarkers();
+      _fetchPolyline();
+      _initialized = true;
+    }
   }
 
   void _setMarkers() {
-    _markers = {
-      Marker(
-        markerId: MarkerId('start'),
-        position: _startLatLng,
-        infoWindow: InfoWindow(title: 'Start'),
-      ),
-      Marker(
-        markerId: MarkerId('end'),
-        position: _endLatLng,
-        infoWindow: InfoWindow(title: 'End'),
-      ),
-    };
+    setState(() {
+      _markers = {
+        Marker(
+          markerId: MarkerId('start'),
+          position: _startLatLng,
+          infoWindow: InfoWindow(title: 'Start'),
+        ),
+        Marker(
+          markerId: MarkerId('end'),
+          position: _endLatLng,
+          infoWindow: InfoWindow(title: 'End'),
+        ),
+      };
+    });
   }
 
   Future<void> _fetchPolyline() async {
@@ -65,7 +82,6 @@ class _MapScreenState extends State<MapScreen> {
         _loading = false;
       });
     } else {
-      // Handle error, e.g., show a message or retry
       print('Failed to fetch directions: ${response.statusCode}');
       setState(() {
         _loading = false;
@@ -75,6 +91,9 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_initialized) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(

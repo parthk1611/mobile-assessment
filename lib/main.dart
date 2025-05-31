@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'screens/input_screen.dart';
 import 'screens/results_screen.dart';
 import 'screens/map_screen.dart';
-import 'screens/input_screen.dart'; // contains RouteProvider
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env"); // Load environment variables before runApp
   runApp(
     ChangeNotifierProvider(
       create: (_) => RouteProvider(),
